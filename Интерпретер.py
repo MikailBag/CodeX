@@ -10,15 +10,24 @@
 
 import math
 
+
+# def line(mas):
+#     for i in mas:
+#         if i == '':
+#             del mas[mas.index('')]
+
 lines = []
 e = ' '
 while (e[0] != 'end') and (e[0] != '.'):
     e = input().split(' ')
     lines.append(e)
+    while '' in lines[lines.index(e)]:
+        lines[lines.index(e)].remove('')
 
 nums = {}
 strs = {}
 bools = {}
+
 
 def list2str(mas):
     s = ''
