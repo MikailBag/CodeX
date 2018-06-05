@@ -33,79 +33,84 @@ def num_exp(line):
         if line[0] in nums.keys():
             return num_exp([nums[line[0]]])
         else:
-            if int(line[0]) == float(line[0]):
-                return int(line[0])
-            else:
-                return float(line[0])
+            try:
+                if int(line[0]) == float(line[0]):
+                    return int(line[0])
+                else:
+                    return float(line[0])
+            except:
+                print("\033[1;31mTHIS 'NUM' IS TOO LARGE TO WORK WITH IT")
+                print("\033[1;31mEXITING PROGRAM")
+                exit()
     else:
         if 'fac' in line:
             return num_exp([math.factorial(num_exp([line[line.index('fac') +1]]))])
         elif ('power' in line) or ('root' in line):
             try:
                 if line.index('power') < line.index('root'):
-                    line[line.index('power') -1] = num_exp(line[line.index('power') +1]) ** num_exp(line[line.index('power') -1])
+                    line[line.index('power') -1] = num_exp([line[line.index('power') +1]]) ** num_exp([line[line.index('power') -1]])
                     del line[line.index('power') +1]
                     del line[line.index('power')]
                     return num_exp(line)
                 else:
-                    line[line.index('root') -1] = num_exp(line[line.index('root') +1]) ** (1 / num_exp(line[line.index('root') - 1]))
+                    line[line.index('root') -1] = num_exp([line[line.index('root') +1]]) ** (1 / num_exp([line[line.index('root') - 1]]))
                     del line[line.index('root') + 1]
                     del line[line.index('root')]
                     return num_exp(line)
             except:
                 if 'power' in line:
-                    line[line.index('power') - 1] = num_exp(line[line.index('power') + 1]) ** num_exp(line[line.index('power') - 1])
+                    line[line.index('power') - 1] = num_exp([line[line.index('power') + 1]]) ** num_exp([line[line.index('power') - 1]])
                     del line[line.index('power') + 1]
                     del line[line.index('power')]
                     return num_exp(line)
                 else:
-                    line[line.index('root') - 1] = num_exp(line[line.index('root') + 1]) ** (1 / num_exp(line[line.index('root') - 1]))
+                    line[line.index('root') - 1] = num_exp([line[line.index('root') + 1]]) ** (1 / num_exp([line[line.index('root') - 1]]))
                     del line[line.index('root') + 1]
                     del line[line.index('root')]
                     return num_exp(line)
         elif ('*' in line) or ('/' in line):
             try:
                 if line.index('*') < line.index('/'):
-                    line[line.index('*') -1] = num_exp(line[line.index('*') +1]) * num_exp(line[line.index('*') -1])
+                    line[line.index('*') -1] = num_exp([line[line.index('*') +1]]) * num_exp([line[line.index('*') -1]])
                     del line[line.index('*') +1]
                     del line[line.index('*')]
                     return num_exp(line)
                 else:
-                    line[line.index('/') -1] = num_exp(line[line.index('/') -1]) / num_exp(line[line.index('/') +1])
+                    line[line.index('/') -1] = num_exp([line[line.index('/') -1]]) / num_exp([line[line.index('/') +1]])
                     del line[line.index('/') +1]
                     del line[line.index('/')]
                     return num_exp(line)
             except:
                 if '*' in line:
-                    line[line.index('*') -1] = num_exp(line[line.index('*') +1]) * num_exp(line[line.index('power') -1])
+                    line[line.index('*') -1] = num_exp([line[line.index('*') +1]]) * num_exp([line[line.index('power') -1]])
                     del line[line.index('*') +1]
                     del line[line.index('*')]
                     return num_exp(line)
                 else:
-                    line[line.index('/') -1] = num_exp(line[line.index('/') -1]) / num_exp(line[line.index('/') +1])
+                    line[line.index('/') -1] = num_exp([line[line.index('/') -1]]) / num_exp([line[line.index('/') +1]])
                     del line[line.index('/') + 1]
                     del line[line.index('/')]
                     return num_exp(line)
         elif ('+' in line) or ('-' in line):
             try:
                 if line.index('+') < line.index('-'):
-                    line[line.index('+') -1] = num_exp(line[line.index('+') +1]) + num_exp(line[line.index('+') -1])
+                    line[line.index('+') -1] = num_exp([line[line.index('+') +1]]) + num_exp([line[line.index('+') -1]])
                     del line[line.index('+') +1]
                     del line[line.index('+')]
                     return num_exp(line)
                 else:
-                    line[line.index('-') -1] = num_exp(line[line.index('-') -1]) - num_exp(line[line.index('-') +1])
+                    line[line.index('-') -1] = num_exp([line[line.index('-') -1]]) - num_exp([line[line.index('-') +1]])
                     del line[line.index('-') +1]
                     del line[line.index('-')]
                     return num_exp(line)
             except:
                 if '+' in line:
-                    line[line.index('+') -1] = num_exp(line[line.index('+') +1]) + num_exp(line[line.index('+') -1])
+                    line[line.index('+') -1] = num_exp([line[line.index('+') +1]]) + num_exp([line[line.index('+') -1]])
                     del line[line.index('+') +1]
                     del line[line.index('+')]
                     return num_exp(line)
                 else:
-                    line[line.index('-') -1] = num_exp(line[line.index('-') -1]) - num_exp(line[line.index('-') +1])
+                    line[line.index('-') -1] = num_exp([line[line.index('-') -1]]) - num_exp([line[line.index('-') +1]])
                     del line[line.index('-') + 1]
                     del line[line.index('-')]
                     return num_exp(line)
