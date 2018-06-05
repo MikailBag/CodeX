@@ -11,7 +11,7 @@
 import math
 
 lines = []
-e = ''
+e = ' '
 while (e[0] != 'end') and (e[0] != '.'):
     e = input().split(' ')
     lines.append(e)
@@ -31,32 +31,84 @@ def list2str(mas):
 def num_exp(line):
     if len(line) == 1:
         if line[0] in nums.keys():
-            return nums[line[0]]
+            return num_exp([nums[line[0]]])
         else:
-            return float(line[0])
+            if int(line[0]) == float(line[0]):
+                return int(line[0])
+            else:
+                return float(line[0])
     else:
-        if ('power' in line) or ('root' in line):
-            if line.index('power') < line.index('root'):
-                line[line.index('power') -1] = num_exp(line[line.index('power') +1]) ** num_exp(line[line.index('power') -1])
-                line.__delitem__(line.index('power') +1)
-                line.__delitem__(line.index('power'))
-                return num_exp(line)
-        elif line[1] == 'root':
-            return num_exp([num_exp([line[2]]) ** (1 / num_exp([line[0]]))])
-        elif line[1] == '+':
-            return num_exp([num_exp([line[0]]) + num_exp([line[2]])])
-        elif line[1] == '-':
-            return num_exp([num_exp([line[0]]) - num_exp([line[2]])])
-        elif line[1] == '*':
-            return num_exp([num_exp([line[0]]) * num_exp([line[2]])])
-        elif line[1] == '/':
-            return num_exp([num_exp([line[0]]) / num_exp([line[2]])])
-        elif line[1] == 'power':
-            return num_exp([num_exp([line[2]]) ** num_exp([line[0]])])
-        elif line[1] == 'root':
-            return num_exp([num_exp([line[2]]) ** (1 / num_exp([line[0]]))])
-        if l[0] == 'fac':
-            return num_exp(math.factorial(num_exp(line[1])))
+        if 'fac' in line:
+            return num_exp([math.factorial(num_exp([line[line.index('fac') +1]]))])
+        elif ('power' in line) or ('root' in line):
+            try:
+                if line.index('power') < line.index('root'):
+                    line[line.index('power') -1] = num_exp(line[line.index('power') +1]) ** num_exp(line[line.index('power') -1])
+                    del line[line.index('power') +1]
+                    del line[line.index('power')]
+                    return num_exp(line)
+                else:
+                    line[line.index('root') -1] = num_exp(line[line.index('root') +1]) ** (1 / num_exp(line[line.index('root') - 1]))
+                    del line[line.index('root') + 1]
+                    del line[line.index('root')]
+                    return num_exp(line)
+            except:
+                if 'power' in line:
+                    line[line.index('power') - 1] = num_exp(line[line.index('power') + 1]) ** num_exp(line[line.index('power') - 1])
+                    del line[line.index('power') + 1]
+                    del line[line.index('power')]
+                    return num_exp(line)
+                else:
+                    line[line.index('root') - 1] = num_exp(line[line.index('root') + 1]) ** (1 / num_exp(line[line.index('root') - 1]))
+                    del line[line.index('root') + 1]
+                    del line[line.index('root')]
+                    return num_exp(line)
+        elif ('*' in line) or ('/' in line):
+            try:
+                if line.index('*') < line.index('/'):
+                    line[line.index('*') -1] = num_exp(line[line.index('*') +1]) * num_exp(line[line.index('*') -1])
+                    del line[line.index('*') +1]
+                    del line[line.index('*')]
+                    return num_exp(line)
+                else:
+                    line[line.index('/') -1] = num_exp(line[line.index('/') -1]) / num_exp(line[line.index('/') +1])
+                    del line[line.index('/') +1]
+                    del line[line.index('/')]
+                    return num_exp(line)
+            except:
+                if '*' in line:
+                    line[line.index('*') -1] = num_exp(line[line.index('*') +1]) * num_exp(line[line.index('power') -1])
+                    del line[line.index('*') +1]
+                    del line[line.index('*')]
+                    return num_exp(line)
+                else:
+                    line[line.index('/') -1] = num_exp(line[line.index('/') -1]) / num_exp(line[line.index('/') +1])
+                    del line[line.index('/') + 1]
+                    del line[line.index('/')]
+                    return num_exp(line)
+        elif ('+' in line) or ('-' in line):
+            try:
+                if line.index('+') < line.index('-'):
+                    line[line.index('+') -1] = num_exp(line[line.index('+') +1]) + num_exp(line[line.index('+') -1])
+                    del line[line.index('+') +1]
+                    del line[line.index('+')]
+                    return num_exp(line)
+                else:
+                    line[line.index('-') -1] = num_exp(line[line.index('-') -1]) - num_exp(line[line.index('-') +1])
+                    del line[line.index('-') +1]
+                    del line[line.index('-')]
+                    return num_exp(line)
+            except:
+                if '+' in line:
+                    line[line.index('+') -1] = num_exp(line[line.index('+') +1]) + num_exp(line[line.index('+') -1])
+                    del line[line.index('+') +1]
+                    del line[line.index('+')]
+                    return num_exp(line)
+                else:
+                    line[line.index('-') -1] = num_exp(line[line.index('-') -1]) - num_exp(line[line.index('-') +1])
+                    del line[line.index('-') + 1]
+                    del line[line.index('-')]
+                    return num_exp(line)
 
 def bool_exp(line):
     if len(line) == 1:
@@ -73,14 +125,17 @@ for l in lines:
         exit()
     elif (l[0] == 'num') or (l[0] == 'number'):
         try:
-            nums[l[1]] = float(l[3])
+            nums[l[1]] = num_exp(l[3:])
         except:
             nums[l[1]] = 0
     elif (l[0] == 'str') or (l[0] == 'string'):
         try:
-            strs[l[1]] = l[3:]
+            strs[l[1]] = strs(l[3])
         except:
-            bools[l[1]] = bool(l[3])
+            strs[l[1]] = list2str(l[3:])
+    elif (l[0] == 'bool') or (l[0] == 'boolean'):
+        try:
+            bools[l[1]] = bool_exp(l[3:])
         except:
             bools[l[1]] = False
     elif l[0] == 'set':
@@ -96,9 +151,6 @@ for l in lines:
                 strs[l[1]] = list2str(l[3:])
         elif l[1] in bools.keys():
             strs[l[1]] = ''
-    elif (l[0] == 'bool') or (l[0] == 'boolean'):
-        try:
-            bools[l[1]] = bool_exp(l[3:])
     elif l[0] == 'print':
         if l[1] in strs.keys():
             print(strs[l[1]])
