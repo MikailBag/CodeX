@@ -31,8 +31,9 @@ bools = {}
 
 def list2str(mas):
     s = ''
-    for i in mas[0]:
-        s += i
+    for i in mas:
+        for j in i:
+            s += j
         s += ' '
     s = s[:-1]
     return s
