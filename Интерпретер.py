@@ -46,9 +46,9 @@ def list2str(mas):
 
 #Приводит выражение из строк к одной строке
 def str_exp(line):
-    if ((l[0][0] == "'") and (l[-1][-1] == "'")) or ((l[0][0] == '"') and (l[-1][-1] == '"')):
-        l[0] = l[0][1:]
-        l[-1] = l[-1][:-1]
+    if ((line[0][0] == "'") and (line[-1][-1] == "'")) or ((line[0][0] == '"') and (line[-1][-1] == '"')):
+        line[0] = line[0][1:]
+        line[-1] = line[-1][:-1]
     if '*' in line:
         return str_exp([str_exp([line[:line.index('*')]]) * num_exp([line[line.index('*')+1:]])])
     elif '+' in line:
@@ -161,79 +161,94 @@ def bool_exp(line):
                 return False
 
 #Обрабатывает код построчно
-for l in lines:
-    if (l[0] == 'end') or (l[0] == '.'):
-        exit()
+def work(ls):
+    for l in ls:
+        if (l[0] == 'end') or (l[0] == '.'):
+            exit()
 
-    #Объявление переменных
-    elif (l[0] == 'num') or (l[0] == 'number'):
-        try:
-            l[1] = int(l[1])
-            print("\033[1;31mERROR: The variable name like", l[1], "is invalid")
-            print()
-            print("\033[1;31mExiting program")
-            print()
-        except:
+        #Объявление переменных
+        elif (l[0] == 'num') or (l[0] == 'number'):
             try:
-                nums[l[1]] = num_exp(l[3:])
+                l[1] = int(l[1])
+                print("\033[1;31mERROR: The variable name like", l[1], "is invalid")
+                print()
+                print("\033[1;31mExiting program")
+                print()
             except:
-                nums[l[1]] = 0
-    elif (l[0] == 'str') or (l[0] == 'string'):
-        try:
-            l[1] = int(l[1])
-            print("\033[1;31mERROR: The variable name like", l[1], "is invalid")
-            print()
-            print("\033[1;31mExiting program")
-            print()
-        except:
+                try:
+                    nums[l[1]] = num_exp(l[3:])
+                except:
+                    nums[l[1]] = 0
+        elif (l[0] == 'str') or (l[0] == 'string'):
             try:
+                l[1] = int(l[1])
+                print("\033[1;31mERROR: The variable name like", l[1], "is invalid")
+                print()
+                print("\033[1;31mExiting program")
+                print()
+            except:
+                try:
+                    if l[2] == '=':
+                        strs[l[1]] = str_exp(l[3:])
+                    else:
+                        strs[l[1]] = str_exp(l[1:])
+                except:
+                    strs[l[1]] = ''
+        elif (l[0] == 'bool') or (l[0] == 'boolean'):
+            try:
+                l[1] = int(l[1])
+                print("\033[1;31mERROR: The variable name like", l[1],"is invalid")
+                print()
+                print("\033[1;31mExiting program")
+                print()
+            except:
+                try:
+                    bools[l[1]] = bool_exp(l[3:])
+                except:
+                    bools[l[1]] = False
+
+        #Присваивание значений переменных
+        elif l[0] == 'set':
+            if l[1] in nums.keys():
                 if l[2] == '=':
-                    strs[l[1]] = str_exp(l[3:])
+                    nums[l[1]] = num_exp(l[3:])
                 else:
-                    strs[l[1]] = str_exp(l[1:])
-            except:
+                    nums[l[1]] = num_exp(l[1:])
+            elif l[1] in strs.keys():
+                if l[3] in strs.keys():
+                    strs[l[1]] = strs[l[3]]
+                else:
+                    strs[l[1]] = list2str(l[3:])
+            elif l[1] in bools.keys():
                 strs[l[1]] = ''
-    elif (l[0] == 'bool') or (l[0] == 'boolean'):
-        try:
-            l[1] = int(l[1])
-            print("\033[1;31mERROR: The variable name like", l[1],"is invalid")
-            print()
-            print("\033[1;31mExiting program")
-            print()
-        except:
-            try:
-                bools[l[1]] = bool_exp(l[3:])
-            except:
-                bools[l[1]] = False
 
-    #Присваивание значений переменных
-    elif l[0] == 'set':
-        if l[1] in nums.keys():
-            if l[2] == '=':
-                nums[l[1]] = num_exp(l[3:])
+        #Печать (выведение) информации
+        elif l[0] == 'print':
+            if (l[1] in strs.keys()) or ((l[1][0] == "'") and (l[-1][-1] == "'")) or ((l[1][0] == '"') and (l[1][-1] == '"')):
+                print(str_exp(l[1:]))
+            elif (l[1] in bools.keys()) or (l[1] == 'true') or (l[1] == 'false'):
+                print(bool_exp(l[1:]))
             else:
-                nums[l[1]] = num_exp(l[1:])
-        elif l[1] in strs.keys():
-            if l[3] in strs.keys():
-                strs[l[1]] = strs[l[3]]
-            else:
-                strs[l[1]] = list2str(l[3:])
-        elif l[1] in bools.keys():
-            strs[l[1]] = ''
+                print(num_exp(l[1:]))
 
-    #Печать (выведение) информации
-    elif l[0] == 'print':
-        if (l[1] in strs.keys()) or ((l[1][0] == "'") and (l[-1][-1] == "'")) or ((l[1][0] == '"') and (l[1][-1] == '"')):
-            print(str_exp(l[1:]))
-        elif (l[1] in bools.keys()) or (l[1] == 'true') or (l[1] == 'false'):
-            print(bool_exp(l[1:]))
+        #Условные операторы
+        elif l[0] == 'if':
+            if bool_exp(l[1:-1]):
+                i = ls.index(l)
+                ifls = ls[i:]
+                ifls = ifls[1:ifls.index(['}'])]
+                work(ifls)
+
+        elif l[0] == '}':
+            pass
+
         else:
-            print(num_exp(l[1:]))
+            print("\033[1;31mERROR: line " + str(lines.index(l)) + "\033[1;31m has invalid syntax")
+            print("\033[1;31mCommand '" + list2str(l) + "\033[1;31m' does not exist")
+            print();
+            print("\033[1;31mExiting program")
+            print();
+            exit()
 
-    else:
-        print("\033[1;31mERROR: line " + str(lines.index(l)) + "\033[1;31m has invalid syntax")
-        print("\033[1;31mCommand '" + list2str(l) + "\033[1;31m' does not exist")
-        print();
-        print("\033[1;31mExiting program")
-        print();
-        exit()
+
+work(lines)
