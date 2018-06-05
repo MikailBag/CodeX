@@ -39,7 +39,7 @@ def num_exp(line):
                 else:
                     return float(line[0])
             except:
-                print("\033[1;31mTHIS 'NUM' IS TOO LARGE TO WORK WITH IT")
+                print("\033[1;31mERROR: THIS 'NUM' IS TOO LARGE TO WORK WITH IT")
                 print("\033[1;31mEXITING PROGRAM")
                 exit()
     else:
