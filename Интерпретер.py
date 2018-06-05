@@ -33,12 +33,19 @@ def list2str(mas):
     s = ''
     for i in mas:
         for j in i:
+            if (mas.index(i) == 0) and (i.index(j) == 0) and ((j == "'") or (j == '"')):
+                j = j[1:]
+            elif (mas.index(i) == len(mas) -1) and (i.index(j) == len(i) -1) and ((j == "'") or (j == '"')):
+                j = j[:-1]
             s += j
         s += ' '
     s = s[:-1]
     return s
 
 def str_exp(line):
+    if ((l[0][0] == "'") and (l[-1][-1] == "'")) or ((l[0][0] == '"') and (l[-1][-1] == '"')):
+        l[0] = l[0][1:]
+        l[-1] = l[-1][:-1]
     if '*' in line:
         return str_exp([str_exp([line[:line.index('*')]]) * num_exp([line[line.index('*')+1:]])])
     elif '+' in line:
@@ -204,7 +211,7 @@ for l in lines:
         elif l[1] in bools.keys():
             strs[l[1]] = ''
     elif l[0] == 'print':
-        if (l[1] in strs.keys()) or (l[1][0] == "'") or (l[1][0] == '"'):
+        if (l[1] in strs.keys()) or ((l[1][0] == "'") and (l[-1][-1] == "'")) or ((l[1][0] == '"') and (l[1][-1] == '"')):
             print(str_exp(l[1:]))
         elif (l[1] in bools.keys()) or (l[1] == 'true') or (l[1] == 'false'):
             print(bool_exp(l[1:]))
