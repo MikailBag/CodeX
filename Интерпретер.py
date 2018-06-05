@@ -16,6 +16,7 @@ import math
 #         if i == '':
 #             del mas[mas.index('')]
 
+#Принимает данные
 lines = []
 e = ' '
 while (e[0] != 'end') and (e[0] != '.'):
@@ -29,6 +30,7 @@ strs = {}
 bools = {}
 
 
+#Переводит список в строку
 def list2str(mas):
     s = ''
     for i in mas:
@@ -42,6 +44,7 @@ def list2str(mas):
     s = s[:-1]
     return s
 
+#Приводит выражение из строк к одной строке
 def str_exp(line):
     if ((l[0][0] == "'") and (l[-1][-1] == "'")) or ((l[0][0] == '"') and (l[-1][-1] == '"')):
         l[0] = l[0][1:]
@@ -56,6 +59,7 @@ def str_exp(line):
         else:
             return list2str(line)
 
+#Приводит численное выражение к одному числу
 def num_exp(line):
     if len(line) == 1:
         if line[0] in nums.keys():
@@ -145,6 +149,7 @@ def num_exp(line):
                     del line[line.index('-')]
                     return num_exp(line)
 
+#Приводит логическое выражение к одному boolean'у
 def bool_exp(line):
     if len(line) == 1:
         if str(line[0]) in bools.keys():
@@ -155,9 +160,12 @@ def bool_exp(line):
             else:
                 return False
 
+#Обрабатывает код построчно
 for l in lines:
     if (l[0] == 'end') or (l[0] == '.'):
         exit()
+
+    #Объявление переменных
     elif (l[0] == 'num') or (l[0] == 'number'):
         try:
             l[1] = int(l[1])
@@ -197,6 +205,8 @@ for l in lines:
                 bools[l[1]] = bool_exp(l[3:])
             except:
                 bools[l[1]] = False
+
+    #Присваивание значений переменных
     elif l[0] == 'set':
         if l[1] in nums.keys():
             if l[2] == '=':
@@ -210,6 +220,8 @@ for l in lines:
                 strs[l[1]] = list2str(l[3:])
         elif l[1] in bools.keys():
             strs[l[1]] = ''
+
+    #Печать (выведение) информации
     elif l[0] == 'print':
         if (l[1] in strs.keys()) or ((l[1][0] == "'") and (l[-1][-1] == "'")) or ((l[1][0] == '"') and (l[1][-1] == '"')):
             print(str_exp(l[1:]))
@@ -217,6 +229,7 @@ for l in lines:
             print(bool_exp(l[1:]))
         else:
             print(num_exp(l[1:]))
+
     else:
         print("\033[1;31mERROR: line " + str(lines.index(l)) + "\033[1;31m has invalid syntax")
         print("\033[1;31mCommand '" + list2str(l) + "\033[1;31m' does not exist")
