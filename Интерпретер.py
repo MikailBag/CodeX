@@ -35,22 +35,28 @@ def num_exp(line):
         else:
             return float(line[0])
     else:
-        if len(line) == 3:
-            if l[1] == '+':
-                return num_exp([num_exp([line[0]]) + num_exp([line[2]])])
-            elif l[1] == '-':
-                return num_exp([num_exp([line[0]]) - num_exp([line[2]])])
-            elif l[1] == '*':
-                return num_exp([num_exp([line[0]]) * num_exp([line[2]])])
-            elif l[1] == '/':
-                return num_exp([num_exp([line[0]]) / num_exp([line[2]])])
-            elif l[1] == 'power':
-                return num_exp([num_exp([line[2]]) ** num_exp([line[0]])])
-            elif l[1] == 'root':
-                return num_exp([num_exp([line[2]]) ** (1 / num_exp([line[0]]))])
-        elif len(line) == 2:
-            if l[0] == 'fac':
-                return num_exp(math.factorial(num_exp(line[1])))
+        if ('power' in line) or ('root' in line):
+            if line.index('power') < line.index('root'):
+                line[line.index('power') -1] = num_exp(line[line.index('power') +1]) ** num_exp(line[line.index('power') -1])
+                line.__delitem__(line.index('power') +1)
+                line.__delitem__(line.index('power'))
+                return num_exp(line)
+        elif line[1] == 'root':
+            return num_exp([num_exp([line[2]]) ** (1 / num_exp([line[0]]))])
+        elif line[1] == '+':
+            return num_exp([num_exp([line[0]]) + num_exp([line[2]])])
+        elif line[1] == '-':
+            return num_exp([num_exp([line[0]]) - num_exp([line[2]])])
+        elif line[1] == '*':
+            return num_exp([num_exp([line[0]]) * num_exp([line[2]])])
+        elif line[1] == '/':
+            return num_exp([num_exp([line[0]]) / num_exp([line[2]])])
+        elif line[1] == 'power':
+            return num_exp([num_exp([line[2]]) ** num_exp([line[0]])])
+        elif line[1] == 'root':
+            return num_exp([num_exp([line[2]]) ** (1 / num_exp([line[0]]))])
+        if l[0] == 'fac':
+            return num_exp(math.factorial(num_exp(line[1])))
 
 def bool_exp(line):
     if len(line) == 1:
@@ -74,9 +80,6 @@ for l in lines:
         try:
             strs[l[1]] = l[3:]
         except:
-            strs[l[1]] = ''
-    elif (l[0] == 'bool') or (l[0] == 'boolean'):
-        try:
             bools[l[1]] = bool(l[3])
         except:
             bools[l[1]] = False
@@ -92,6 +95,9 @@ for l in lines:
             else:
                 strs[l[1]] = list2str(l[3:])
         elif l[1] in bools.keys():
+            strs[l[1]] = ''
+    elif (l[0] == 'bool') or (l[0] == 'boolean'):
+        try:
             bools[l[1]] = bool_exp(l[3:])
     elif l[0] == 'print':
         if l[1] in strs.keys():
