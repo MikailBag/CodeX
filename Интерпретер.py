@@ -16,6 +16,15 @@ import math
 #         if i == '':
 #             del mas[mas.index('')]
 
+#Сообщения об ошибках
+q=''
+def ERROR(q):
+    print("\033[1;31mERROR:",q)
+    print()
+    print("\033[1;31m[Exiting program]")
+    print()
+    exit(0);
+
 #Принимает данные
 lines = []
 e = ' '
@@ -71,11 +80,7 @@ def num_exp(line):
                 else:
                     return float(line[0])
             except:
-                print("\033[1;31mERROR: This num is too large")
-                print()
-                print("\033[1;31mExiting program")
-                print()
-                exit();
+                ERROR('This num is too large')
     else:
         if 'fac' in line:
             return num_exp([math.factorial(num_exp([line[line.index('fac') +1]]))])
@@ -159,6 +164,26 @@ def bool_exp(line):
                 return True
             else:
                 return False
+    elif '==' in line:
+        return num_exp(line[:line.index('==')]) == num_exp(line[line.index('==') +1:])
+    elif '!=' in line:
+        return num_exp(line[:line.index('!=')]) != num_exp(line[line.index('!=') +1:])
+    elif '>' in line:
+        return num_exp(line[:line.index('>')]) > num_exp(line[line.index('>') +1:])
+    elif '<' in line:
+        return num_exp(line[:line.index('<')]) < num_exp(line[line.index('<') +1:])
+    elif '>=' in line:
+        return num_exp(line[:line.index('>=')]) >= num_exp(line[line.index('>=') +1:])
+    elif '<=' in line:
+        return num_exp(line[:line.index('<=')]) <= num_exp(line[line.index('<=') +1:])
+    elif '&&' in line:
+        return bool_exp(line[:line.index('&&')]) and bool_exp(line[line.index('&&') + 1:])
+    elif '||' in line:
+        return bool_exp(line[:line.index('||')]) or bool_exp(line[line.index('||') + 1:])
+    elif '^' in line:
+        return bool_exp(line[:line.index('^')]) ^ bool_exp(line[line.index('^') + 1:])
+    elif '!' in line:
+        return not bool_exp(line[line.index('&&') + 1:])
 
 #Обрабатывает код построчно
 def work(ls):
@@ -170,10 +195,7 @@ def work(ls):
         elif (l[0] == 'num') or (l[0] == 'number'):
             try:
                 l[1] = int(l[1])
-                print("\033[1;31mERROR: The variable name like", l[1], "is invalid")
-                print()
-                print("\033[1;31mExiting program")
-                print()
+                ERROR("The variable name like"+l[1]+"is invalid")
             except:
                 try:
                     nums[l[1]] = num_exp(l[3:])
@@ -182,10 +204,7 @@ def work(ls):
         elif (l[0] == 'str') or (l[0] == 'string'):
             try:
                 l[1] = int(l[1])
-                print("\033[1;31mERROR: The variable name like", l[1], "is invalid")
-                print()
-                print("\033[1;31mExiting program")
-                print()
+                ERROR("The variable name like" + l[1] + "is invalid")
             except:
                 try:
                     if l[2] == '=':
@@ -197,10 +216,7 @@ def work(ls):
         elif (l[0] == 'bool') or (l[0] == 'boolean'):
             try:
                 l[1] = int(l[1])
-                print("\033[1;31mERROR: The variable name like", l[1],"is invalid")
-                print()
-                print("\033[1;31mExiting program")
-                print()
+                ERROR("The variable name like" + l[1] + "is invalid")
             except:
                 try:
                     bools[l[1]] = bool_exp(l[3:])
@@ -243,12 +259,7 @@ def work(ls):
             pass
 
         else:
-            print("\033[1;31mERROR: line " + str(lines.index(l)) + "\033[1;31m has invalid syntax")
-            print("\033[1;31mCommand '" + list2str(l) + "\033[1;31m' does not exist")
-            print();
-            print("\033[1;31mExiting program")
-            print();
-            exit()
+            ERROR("Command '" + list2str(l) + "\033[1;31m' does not exist")
 
 
 work(lines)
