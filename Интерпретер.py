@@ -22,11 +22,22 @@ bools = {}
 
 def list2str(mas):
     s = ''
-    for i in mas:
+    for i in mas[0]:
         s += i
         s += ' '
     s = s[:-1]
     return s
+
+def str_exp(line):
+    if '*' in line:
+        return str_exp([str_exp([line[:line.index('*')]]) * num_exp([line[line.index('*')+1:]])])
+    elif '+' in line:
+        return str_exp([str_exp([line[:line.index('+')]]) + str_exp([line[line.index('+')+1:]])])
+    else:
+        if (str(line[0]) in strs.keys()) and (len(line) == 1):
+            return strs[line[0]]
+        else:
+            return list2str(line)
 
 def num_exp(line):
     if len(line) == 1:
@@ -39,9 +50,11 @@ def num_exp(line):
                 else:
                     return float(line[0])
             except:
-                print("\033[1;31mERROR: THIS 'NUM' IS TOO LARGE TO WORK WITH IT")
-                print("\033[1;31mEXITING PROGRAM")
-                exit()
+                print("\033[1;31mERROR: This num is too large")
+                print()
+                print("\033[1;31mExiting program")
+                print()
+                exit();
     else:
         if 'fac' in line:
             return num_exp([math.factorial(num_exp([line[line.index('fac') +1]]))])
@@ -117,7 +130,7 @@ def num_exp(line):
 
 def bool_exp(line):
     if len(line) == 1:
-        if line[0] in bools.keys():
+        if str(line[0]) in bools.keys():
             return bools[line[0]]
         else:
             if line[0] == 'true':
@@ -130,19 +143,43 @@ for l in lines:
         exit()
     elif (l[0] == 'num') or (l[0] == 'number'):
         try:
-            nums[l[1]] = num_exp(l[3:])
+            l[1] = int(l[1])
+            print("\033[1;31mERROR: The variable name like", l[1], "is invalid")
+            print()
+            print("\033[1;31mExiting program")
+            print()
         except:
-            nums[l[1]] = 0
+            try:
+                nums[l[1]] = num_exp(l[3:])
+            except:
+                nums[l[1]] = 0
     elif (l[0] == 'str') or (l[0] == 'string'):
         try:
-            strs[l[1]] = strs(l[3])
+            l[1] = int(l[1])
+            print("\033[1;31mERROR: The variable name like", l[1], "is invalid")
+            print()
+            print("\033[1;31mExiting program")
+            print()
         except:
-            strs[l[1]] = list2str(l[3:])
+            try:
+                if l[2] == '=':
+                    strs[l[1]] = str_exp(l[3:])
+                else:
+                    strs[l[1]] = str_exp(l[1:])
+            except:
+                strs[l[1]] = ''
     elif (l[0] == 'bool') or (l[0] == 'boolean'):
         try:
-            bools[l[1]] = bool_exp(l[3:])
+            l[1] = int(l[1])
+            print("\033[1;31mERROR: The variable name like", l[1],"is invalid")
+            print()
+            print("\033[1;31mExiting program")
+            print()
         except:
-            bools[l[1]] = False
+            try:
+                bools[l[1]] = bool_exp(l[3:])
+            except:
+                bools[l[1]] = False
     elif l[0] == 'set':
         if l[1] in nums.keys():
             if l[2] == '=':
@@ -157,9 +194,16 @@ for l in lines:
         elif l[1] in bools.keys():
             strs[l[1]] = ''
     elif l[0] == 'print':
-        if l[1] in strs.keys():
-            print(strs[l[1]])
+        if (l[1] in strs.keys()) or (l[1][0] == "'") or (l[1][0] == '"'):
+            print(str_exp(l[1:]))
         elif (l[1] in bools.keys()) or (l[1] == 'true') or (l[1] == 'false'):
-            print(bool_exp([l[1:]]))
+            print(bool_exp(l[1:]))
         else:
             print(num_exp(l[1:]))
+    else:
+        print("\033[1;31mERROR: line " + str(lines.index(l)) + "\033[1;31m has invalid syntax")
+        print("\033[1;31mCommand '" + list2str(l) + "\033[1;31m' does not exist")
+        print();
+        print("\033[1;31mExiting program")
+        print();
+        exit()
