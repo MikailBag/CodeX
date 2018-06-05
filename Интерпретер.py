@@ -21,8 +21,8 @@ e = ' '
 while (e[0] != 'end') and (e[0] != '.'):
     e = input().split(' ')
     lines.append(e)
-    while '' in lines[lines.index(e)]:
-        lines[lines.index(e)].remove('')
+    while '' in lines[len(lines) - 1]:
+        lines[len(lines) - 1].remove('')
 
 nums = {}
 strs = {}
@@ -104,7 +104,7 @@ def num_exp(line):
                     return num_exp(line)
             except:
                 if '*' in line:
-                    line[line.index('*') -1] = num_exp([line[line.index('*') +1]]) * num_exp([line[line.index('power') -1]])
+                    line[line.index('*') -1] = num_exp([line[line.index('*') +1]]) * num_exp([line[line.index('*') -1]])
                     del line[line.index('*') +1]
                     del line[line.index('*')]
                     return num_exp(line)
