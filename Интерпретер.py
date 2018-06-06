@@ -8,6 +8,8 @@
 
 
 import math
+from colorama import *
+init()
 
 #Check if param can be number
 #Проверить, может ли параметр быть числом
@@ -22,9 +24,9 @@ def isNum(x):
 #Сообщения об ошибках
 def ERROR(q):
     print()
-    print("\033[1;31mERROR:",q)
+    print(Fore.RED + "ERROR: " + q)
     print()
-    print("\033[1;31m[Exiting program]")
+    print(Fore.RED + "[Exiting program]")
     print()
     exit(0);
 
@@ -297,13 +299,13 @@ def work(ls):
                 print()
                 bools[l[1]] = bool_exp([input()])
             else:
-                ERROR("Variable '" + l[1] + "\033[1;31m' does not exist")
+                ERROR("Variable '" + l[1] + "' does not exist")
 
         elif l[0] == '}':
             pass
 
         else:
-            ERROR("Command '" + list2str(l) + "\033[1;31m' does not exist")
+            ERROR("Command '" + list2str(l) + "' does not exist")
 
 #Data input from console
 #Принимает данные из консоли
