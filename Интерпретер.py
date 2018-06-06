@@ -2,22 +2,24 @@
 # -*- coding: utf-8 -*-
 
 
-#CodeX Script Beta 1.0.0 Ultra Full HD Free Download Without SMS And Registration
-
-# Von Sup Studio Production
+#CodeX Script Beta 1.2.0 Ultra Full HD Free Download Without SMS And Registration
+#Von Sup Studio Production
 
 
 
 import math
 
+#Check if param can be number
+#Проверить, может ли параметр быть числом
+def isNum(x):
+    try:
+        l[1] = int(l[1])
+        return True
+    except:
+        return False
 
-# def line(mas):
-#     for i in mas:
-#         if i == '':
-#             del mas[mas.index('')]
-
+#Error messages
 #Сообщения об ошибках
-q=''
 def ERROR(q):
     print()
     print("\033[1;31mERROR:",q)
@@ -26,23 +28,7 @@ def ERROR(q):
     print()
     exit(0);
 
-#Принимает данные
-lines = []
-e = [' ']
-while (e[0] != 'end') and (e[0] != '.'):
-    e = input().split(' ')
-    if e == ['']:
-        e = [' ']
-    else:
-        lines.append(e)
-        while '' in lines[len(lines) - 1]:
-            lines[len(lines) - 1].remove('')
-
-nums = {}
-strs = {}
-bools = {}
-condition = 'nothing'
-
+#Converts list to string
 #Переводит список в строку
 def list2str(mas):
     s = ''
@@ -57,6 +43,7 @@ def list2str(mas):
     s = s[:-1]
     return s
 
+#Converts string expression to str variable
 #Приводит выражение из строк к одной строке
 def str_exp(line):
     if ((line[0][0] == "'") and (line[-1][-1] == "'")) or ((line[0][0] == '"') and (line[-1][-1] == '"')):
@@ -72,6 +59,7 @@ def str_exp(line):
         else:
             return list2str(line)
 
+#Converts numerical expression to num variable
 #Приводит численное выражение к одному числу
 def num_exp(line):
     if len(line) == 1:
@@ -163,6 +151,7 @@ def num_exp(line):
             del line[line.index('%')]
             return num_exp(line)
 
+#Converts logical expression to bool variable
 #Приводит логическое выражение к одному boolean'у
 def bool_exp(line):
     if len(line) == 1:
@@ -194,6 +183,7 @@ def bool_exp(line):
     elif '!' in line:
         return not bool_exp(line[line.index('&&') + 1:])
 
+#Processing code
 #Обрабатывает код построчно
 def work(ls):
     for l in ls:
@@ -202,21 +192,20 @@ def work(ls):
         elif (l[0] == 'end') or (l[0] == '.'):
             exit()
 
+        #Defining variables
         #Объявление переменных
         elif (l[0] == 'num') or (l[0] == 'number'):
-            try:
-                l[1] = int(l[1])
-                ERROR("The variable name like"+l[1]+"is invalid")
-            except:
+            if isNum(l[1]):
+                ERROR("The variable name "+l[1]+" is invalid")
+            else:
                 try:
                     nums[l[1]] = num_exp(l[3:])
                 except:
                     nums[l[1]] = 0
         elif (l[0] == 'str') or (l[0] == 'string'):
-            try:
-                l[1] = int(l[1])
-                ERROR("The variable name like" + l[1] + "is invalid")
-            except:
+            if isNum(l[1]):
+                ERROR("The variable name "+l[1]+" is invalid")
+            else:
                 try:
                     if l[2] == '=':
                         strs[l[1]] = str_exp(l[3:])
@@ -225,15 +214,15 @@ def work(ls):
                 except:
                     strs[l[1]] = ''
         elif (l[0] == 'bool') or (l[0] == 'boolean'):
-            try:
-                l[1] = int(l[1])
-                ERROR("The variable name like" + l[1] + "is invalid")
-            except:
+            if isNum(l[1]):
+                ERROR("The variable name "+l[1]+" is invalid")
+            else:
                 try:
                     bools[l[1]] = bool_exp(l[3:])
                 except:
                     bools[l[1]] = False
 
+        #Setting variables values
         #Присваивание значений переменных
         elif l[0] == 'set':
             if l[1] in nums.keys():
@@ -249,6 +238,7 @@ def work(ls):
             elif l[1] in bools.keys():
                 strs[l[1]] = ''
 
+        #Output
         #Печать (выведение) информации
         elif l[0] == 'print':
             if (l[1] in strs.keys()) or ((l[1][0] == "'") and (l[-1][-1] == "'")) or ((l[1][0] == '"') and (l[1][-1] == '"')):
@@ -258,6 +248,7 @@ def work(ls):
             else:
                 print(num_exp(l[1:]))
 
+        #Conditional operators
         #Условные операторы
         elif l[0] == 'if':
             condition = bool_exp(l[1:-1])
@@ -281,7 +272,8 @@ def work(ls):
             while ls[i] != ['}']:
                 del ls[i]
 
-        #Условный цикл
+        #while loop
+        #Цикл while
         elif l[0] == 'while':
             while bool_exp(l[1:-1]):
                 i = ls.index(l)
@@ -292,7 +284,8 @@ def work(ls):
             while ls[i] != ['}']:
                 del ls[i]
 
-        #Ввод данных
+        #Data input during script
+        #Ввод данных в процессе выполнения скрипта
         elif l[0] == 'input':
             if l[1] in nums.keys():
                 print()
@@ -312,5 +305,21 @@ def work(ls):
         else:
             ERROR("Command '" + list2str(l) + "\033[1;31m' does not exist")
 
-
+#Data input from console
+#Принимает данные из консоли
+lines = []
+nums = {}
+strs = {}
+bools = {}
+condition = 'nothing'
+e = [' ']
+while (e[0] != 'end') and (e[0] != '.'):
+    e = input('>>> ').split(' ')
+    if e == ['']:
+        e = [' ']
+    else:
+        lines.append(e)
+        while '' in lines[len(lines) - 1]:
+            lines[len(lines) - 1].remove('')
 work(lines)
+
