@@ -41,7 +41,7 @@ while (e[0] != 'end') and (e[0] != '.'):
 nums = {}
 strs = {}
 bools = {}
-
+condition = 'nothing'
 
 #Переводит список в строку
 def list2str(mas):
@@ -258,7 +258,19 @@ def work(ls):
 
         #Условные операторы
         elif l[0] == 'if':
-            if bool_exp(l[1:-1]):
+            condition = bool_exp(l[1:-1])
+            if condition:
+                i = ls.index(l)
+                ifls = ls[i:]
+                ifls = ifls[1:ifls.index(['}'])]
+                work(ifls)
+            i = ls.index(l)
+            while ls[i] != ['}']:
+                del ls[i]
+        elif l[0] == 'else':
+            if condition == 'nothing':
+                ERROR("The condition is not defined")
+            elif not condition:
                 i = ls.index(l)
                 ifls = ls[i:]
                 ifls = ifls[1:ifls.index(['}'])]
