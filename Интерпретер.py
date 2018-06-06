@@ -157,6 +157,11 @@ def num_exp(line):
                     del line[line.index('-') + 1]
                     del line[line.index('-')]
                     return num_exp(line)
+        elif '%' in line:
+            line[line.index('%') - 1] = num_exp([line[line.index('%') - 1]]) % num_exp([line[line.index('%') + 1]])
+            del line[line.index('%') + 1]
+            del line[line.index('%')]
+            return num_exp(line)
 
 #Приводит логическое выражение к одному boolean'у
 def bool_exp(line):
