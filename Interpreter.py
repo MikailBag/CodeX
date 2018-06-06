@@ -354,7 +354,7 @@ if len(sys.argv) >= 2:
                     break
 else:
     while (e[0] != 'end') and (e[0] != '.'):
-        e = input('>>> ').split(' ')
+        e = input().split(' ')
         if e == ['']:
             e = [' ']
         else:
