@@ -27,12 +27,15 @@ def ERROR(q):
 
 #Принимает данные
 lines = []
-e = ' '
+e = [' ']
 while (e[0] != 'end') and (e[0] != '.'):
     e = input().split(' ')
-    lines.append(e)
-    while '' in lines[len(lines) - 1]:
-        lines[len(lines) - 1].remove('')
+    if e == ['']:
+        e = [' ']
+    else:
+        lines.append(e)
+        while '' in lines[len(lines) - 1]:
+            lines[len(lines) - 1].remove('')
 
 nums = {}
 strs = {}
@@ -80,7 +83,7 @@ def num_exp(line):
                 else:
                     return float(line[0])
             except:
-                ERROR('This num is too large')
+                ERROR('The value of this variable is invalid')
     else:
         if 'fac' in line:
             return num_exp([math.factorial(num_exp([line[line.index('fac') +1]]))])
