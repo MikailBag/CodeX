@@ -176,10 +176,10 @@ def bool_exp(line):
         return num_exp(line[:line.index('>=')]) >= num_exp(line[line.index('>=') +1:])
     elif '<=' in line:
         return num_exp(line[:line.index('<=')]) <= num_exp(line[line.index('<=') +1:])
-    elif '&&' in line:
-        return bool_exp(line[:line.index('&&')]) and bool_exp(line[line.index('&&') + 1:])
-    elif '||' in line:
-        return bool_exp(line[:line.index('||')]) or bool_exp(line[line.index('||') + 1:])
+    elif '&' in line:
+        return bool_exp(line[:line.index('&')]) and bool_exp(line[line.index('&') + 1:])
+    elif '|' in line:
+        return bool_exp(line[:line.index('|')]) or bool_exp(line[line.index('|') + 1:])
     elif '^' in line:
         return bool_exp(line[:line.index('^')]) ^ bool_exp(line[line.index('^') + 1:])
     elif '!' in line:
@@ -254,6 +254,20 @@ def work(ls):
                 ifls = ls[i:]
                 ifls = ifls[1:ifls.index(['}'])]
                 work(ifls)
+            i = ls.index(l)
+            while ls[i] != ['}']:
+                del ls[i]
+
+        # Условный цикл
+        elif l[0] == 'while':
+            while bool_exp(l[1:-1]):
+                i = ls.index(l)
+                ifls = ls[i:]
+                ifls = ifls[1:ifls.index(['}'])]
+                work(ifls)
+            i = ls.index(l)
+            while ls[i] != ['}']:
+                del ls[i]
 
         elif l[0] == '}':
             pass
