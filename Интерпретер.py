@@ -19,6 +19,7 @@ import math
 #Сообщения об ошибках
 q=''
 def ERROR(q):
+    print()
     print("\033[1;31mERROR:",q)
     print()
     print("\033[1;31m[Exiting program]")
@@ -261,7 +262,7 @@ def work(ls):
             while ls[i] != ['}']:
                 del ls[i]
 
-        # Условный цикл
+        #Условный цикл
         elif l[0] == 'while':
             while bool_exp(l[1:-1]):
                 i = ls.index(l)
@@ -271,6 +272,17 @@ def work(ls):
             i = ls.index(l)
             while ls[i] != ['}']:
                 del ls[i]
+
+        #Ввод данных
+        elif l[0] == 'input':
+            if l[1] in nums.keys():
+                nums[l[1]] = num_exp(input())
+            elif l[1] in strs.keys():
+                strs[l[1]] = input()
+            elif l[1] in bools.keys():
+                bools[l[1]] = bool_exp(input())
+            else:
+                ERROR("Variable '" + l[1] + "\033[1;31m' does not exist")
 
         elif l[0] == '}':
             pass
