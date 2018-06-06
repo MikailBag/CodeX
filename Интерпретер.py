@@ -197,7 +197,9 @@ def bool_exp(line):
 #Обрабатывает код построчно
 def work(ls):
     for l in ls:
-        if (l[0] == 'end') or (l[0] == '.'):
+        if l[0][0] == '#':
+            continue
+        elif (l[0] == 'end') or (l[0] == '.'):
             exit()
 
         #Объявление переменных
