@@ -339,7 +339,6 @@ if len(sys.argv) >= 2:
                 else:
                     break
 else:
-    print(Color.GREEN + "Welcome to CodeX Interactive shell" + Color.RESET)
     while (e[0] != 'end') and (e[0] != '.'):
         e = input('>>> ').split(' ')
         if e == ['']:
