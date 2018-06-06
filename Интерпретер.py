@@ -316,21 +316,30 @@ bools = {}
 condition = 'nothing'
 e = [' ']
 if len(sys.argv) >= 2:
-    with open(sys.argv[1]) as f:
-        content = f.readlines()
-        content = [x.strip() for x in content]
-        for i in content:
-            e = str(i).split()
-            if (e[0] != 'end') and (e[0] != '.'):
-                if e == ['']:
-                    e = [' ']
+    import re
+    cxs_pattern = re.compile('.*\.cxs')
+    fileName = ""
+    for arg in sys.argv:
+        if cxs_pattern.match(arg):
+            fileName = arg
+            break
+    if fileName != "":
+        with open(fileName) as f:
+            content = f.readlines()
+            content = [x.strip() for x in content]
+            for i in content:
+                e = str(i).split()
+                if (e[0] != 'end') and (e[0] != '.'):
+                    if e == ['']:
+                        e = [' ']
+                    else:
+                        lines.append(e)
+                        while '' in lines[len(lines) - 1]:
+                            lines[len(lines) - 1].remove('')
                 else:
-                    lines.append(e)
-                    while '' in lines[len(lines) - 1]:
-                        lines[len(lines) - 1].remove('')
-            else:
-                break
+                    break
 else:
+    print(Fore.GREEN + "Welcome to CodeX Interactive shell" + Fore.RESET)
     while (e[0] != 'end') and (e[0] != '.'):
         e = input('>>> ').split(' ')
         if e == ['']:
