@@ -276,11 +276,14 @@ def work(ls):
         #Ввод данных
         elif l[0] == 'input':
             if l[1] in nums.keys():
-                nums[l[1]] = num_exp(input())
+                print()
+                nums[l[1]] = num_exp([input()])
             elif l[1] in strs.keys():
+                print()
                 strs[l[1]] = input()
             elif l[1] in bools.keys():
-                bools[l[1]] = bool_exp(input())
+                print()
+                bools[l[1]] = bool_exp([input()])
             else:
                 ERROR("Variable '" + l[1] + "\033[1;31m' does not exist")
 
