@@ -84,12 +84,9 @@ def num_exp(line):
             return num_exp([nums[line[0]]])
         else:
             try:
-                if int(line[0]) == float(line[0]):
-                    return int(line[0])
-                else:
-                    return float(line[0])
+                return float(line[0])
             except:
-                ERROR('The value of this variable is invalid')
+                ERROR("The value '" + str(line[0]) + "' is invalid")
     else:
         if 'fac' in line:
             return num_exp([math.factorial(num_exp([line[line.index('fac') +1]]))])
@@ -116,17 +113,22 @@ def num_exp(line):
                     del line[line.index('root') + 1]
                     del line[line.index('root')]
                     return num_exp(line)
-        elif ('*' in line) or ('/' in line):
+        elif ('*' in line) or ('/' in line) or ('//' in line):
             try:
-                if line.index('*') < line.index('/'):
+                if (line.index('*') < line.index('/')) and (line.index('*') < line.index('//')):
                     line[line.index('*') -1] = num_exp([line[line.index('*') +1]]) * num_exp([line[line.index('*') -1]])
                     del line[line.index('*') +1]
                     del line[line.index('*')]
                     return num_exp(line)
-                else:
+                elif line.index('/') < line.index('//'):
                     line[line.index('/') -1] = num_exp([line[line.index('/') -1]]) / num_exp([line[line.index('/') +1]])
                     del line[line.index('/') +1]
                     del line[line.index('/')]
+                    return num_exp(line)
+                else:
+                    line[line.index('//') - 1] = num_exp([line[line.index('//') - 1]]) // num_exp([line[line.index('//') + 1]])
+                    del line[line.index('//') + 1]
+                    del line[line.index('//')]
                     return num_exp(line)
             except:
                 if '*' in line:
@@ -134,10 +136,15 @@ def num_exp(line):
                     del line[line.index('*') +1]
                     del line[line.index('*')]
                     return num_exp(line)
-                else:
+                elif '/' in line:
                     line[line.index('/') -1] = num_exp([line[line.index('/') -1]]) / num_exp([line[line.index('/') +1]])
                     del line[line.index('/') + 1]
                     del line[line.index('/')]
+                    return num_exp(line)
+                elif '//' in line:
+                    line[line.index('//') -1] = num_exp([line[line.index('//') -1]]) // num_exp([line[line.index('//') +1]])
+                    del line[line.index('//') + 1]
+                    del line[line.index('//')]
                     return num_exp(line)
         elif ('+' in line) or ('-' in line):
             try:
@@ -238,6 +245,11 @@ def work(ls):
                     bools[l[1]] = bool_exp(l[3:])
                 except:
                     bools[l[1]] = False
+        elif (l[0] == 'arr') or (l[0] == 'array'):
+            if isNum(l[1]):
+                ERROR("The variable name " + l[1] + " is invalid")
+            else:
+                arrs[l[1]] = []
 
         #Setting variables values
         #Присваивание значений переменных
@@ -254,6 +266,31 @@ def work(ls):
                     strs[l[1]] = list2str(l[3:])
             elif l[1] in bools.keys():
                 strs[l[1]] = ''
+
+        # Adding elements to arrays
+        # Добавление элементов в массив
+        elif l[0] == 'add':
+            if l[1] in arrs.keys():
+                try:
+                    arrs[l[1]].append(bool_exp(l[2:]))
+                except:
+                    try:
+                        arrs[l[1]].append(num_exp(l[2:]))
+                    except:
+                        arrs[l[1]].append(str_exp(l[2:]))
+            else:
+                ERROR("Array '" + l[1] + "' does not exist")
+
+        # Removing elements from arrays
+        # Удаление элементов из массивов
+        elif l[0] == 'del':
+            if l[1] in arrs.keys():
+                try:
+                    del arrs[l[1]] [num_exp(l[2:])]
+                except:
+                    ERROR('Bad syntax in line ' + lines.index(l))
+            else:
+                ERROR("Array '" + l[1] + "' does not exist")
 
         #Output
         #Печать (выведение) информации
@@ -327,6 +364,7 @@ lines = []
 nums = {}
 strs = {}
 bools = {}
+arrs = {}
 condition = 'nothing'
 e = [' ']
 if len(sys.argv) >= 2:
