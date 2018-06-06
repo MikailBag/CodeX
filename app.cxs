@@ -1,0 +1,8 @@
+num i = 1
+num n
+input n
+while i <= n {
+print i
+set i + 1
+}
+.

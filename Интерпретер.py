@@ -9,13 +9,14 @@
 
 import math
 from colorama import *
+import sys
 init()
 
 #Check if param can be number
 #Проверить, может ли параметр быть числом
 def isNum(x):
     try:
-        l[1] = int(l[1])
+        x = int(x)
         return True
     except:
         return False
@@ -290,7 +291,6 @@ def work(ls):
         #Ввод данных в процессе выполнения скрипта
         elif l[0] == 'input':
             if l[1] in nums.keys():
-                print()
                 nums[l[1]] = num_exp([input()])
             elif l[1] in strs.keys():
                 print()
@@ -315,13 +315,29 @@ strs = {}
 bools = {}
 condition = 'nothing'
 e = [' ']
-while (e[0] != 'end') and (e[0] != '.'):
-    e = input('>>> ').split(' ')
-    if e == ['']:
-        e = [' ']
-    else:
-        lines.append(e)
-        while '' in lines[len(lines) - 1]:
-            lines[len(lines) - 1].remove('')
+if len(sys.argv) >= 2:
+    with open(sys.argv[1]) as f:
+        content = f.readlines()
+        content = [x.strip() for x in content]
+        for i in content:
+            e = str(i).split()
+            if (e[0] != 'end') and (e[0] != '.'):
+                if e == ['']:
+                    e = [' ']
+                else:
+                    lines.append(e)
+                    while '' in lines[len(lines) - 1]:
+                        lines[len(lines) - 1].remove('')
+            else:
+                break
+else:
+    while (e[0] != 'end') and (e[0] != '.'):
+        e = input('>>> ').split(' ')
+        if e == ['']:
+            e = [' ']
+        else:
+            lines.append(e)
+            while '' in lines[len(lines) - 1]:
+                lines[len(lines) - 1].remove('')
 work(lines)
 
