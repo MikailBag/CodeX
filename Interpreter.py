@@ -11,11 +11,11 @@ import math
 import sys
 
 RED = '\033[1;31m'
-BLUE  = '\033[1;34m'
-CYAN  = '\033[1;36m'
+BLUE = '\033[1;34m'
+CYAN = '\033[1;36m'
 GREEN = '\033[0;32m'
 RESET = '\033[0;0m'
-BOLD    = '\033[;1m'
+BOLD = '\033[;1m'
 REVERSE = '\033[;7m'
 HEADER = '\033[95m'
 OKBLUE = '\033[94m'
@@ -25,6 +25,13 @@ FAIL = '\033[91m'
 ENDC = '\033[0m'
 BOLD = '\033[1m'
 UNDERLINE = '\033[4m'
+
+# Request to the element of array
+# Обращение к элементу массива
+def arr_elem(line):
+    index = num_exp(line[line.index('[')+1 : line.index(']')])
+    arr = line[:line.index('[')]
+    return arrs[arr][index]
 
 #Check if param can be number
 #Проверить, может ли параметр быть числом
@@ -299,6 +306,8 @@ def work(ls):
                 print(str_exp(l[1:]))
             elif (l[1] in bools.keys()) or (l[1] == 'true') or (l[1] == 'false'):
                 print(bool_exp(l[1:]))
+            elif l[1] in arrs.keys():
+                print(arr_elem(l[2:]))
             else:
                 print(num_exp(l[1:]))
 
@@ -346,7 +355,7 @@ def work(ls):
             elif l[1] in strs.keys():
                 print()
                 strs[l[1]] = input()
-            elif l[1] in bools.keys():
+            elif l[1][:l.index('[')] in bools.keys():
                 print()
                 bools[l[1]] = bool_exp([input()])
             else:
