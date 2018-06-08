@@ -29,7 +29,7 @@ UNDERLINE = '\033[4m'
 # Request to the element of array
 # Обращение к элементу массива
 def arr_elem(line):
-    index = num_exp(line[0][line[0].index('[')+1 : line[0].index(']')])
+    index = num_exp(line[line.index('[')+1 : line.index(']')])
     arr = line[:line.index('[')]
     return arrs[arr][index]
 
@@ -95,8 +95,6 @@ def num_exp(line):
             except:
                 ERROR("The value '" + str(line[0]) + "' is invalid")
     else:
-        if '[' in line[0]:
-            return arr_elem()
         if 'fac' in line:
             return num_exp([math.factorial(num_exp([line[line.index('fac') +1]]))])
         elif ('power' in line) or ('root' in line):
@@ -308,9 +306,8 @@ def work(ls):
                 print(str_exp(l[1:]))
             elif (l[1] in bools.keys()) or (l[1] == 'true') or (l[1] == 'false'):
                 print(bool_exp(l[1:]))
-            if '[' in l[1]:
-                if l[1][:l[1].index('[')] in arrs.keys():
-                    print(arr_elem(l[1:]))
+            elif l[1] in arrs.keys():
+                print(arr_elem(l[2:]))
             else:
                 print(num_exp(l[1:]))
 
@@ -358,7 +355,7 @@ def work(ls):
             elif l[1] in strs.keys():
                 print()
                 strs[l[1]] = input()
-            elif l[1] in bools.keys():
+            elif l[1][:l.index('[')] in bools.keys():
                 print()
                 bools[l[1]] = bool_exp([input()])
             else:
