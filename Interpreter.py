@@ -229,9 +229,9 @@ def work(ls):
             if isNum(l[1]):
                 ERROR("The variable name "+l[1]+" is invalid")
             else:
-                try:
+                if len(l) >= 4:
                     nums[l[1]] = num_exp(l[3:])
-                except:
+                else:
                     nums[l[1]] = 0
         elif (l[0] == 'str') or (l[0] == 'string'):
             if isNum(l[1]):
@@ -360,6 +360,11 @@ def work(ls):
                 bools[l[1]] = bool_exp([input()])
             else:
                 ERROR("Variable '" + l[1] + "' does not exist")
+
+        # Exiting program
+        # Выход из программы
+        elif l[0] == 'exit':
+            exit()
 
         elif l[0] == '}':
             pass
