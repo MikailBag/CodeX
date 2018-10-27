@@ -409,10 +409,9 @@ else:
         e = input().split(' ')
         if e == ['']:
             e = [' ']
-        else:
-            lines.append(e)
-            while '' in lines[len(lines) - 1]:
-                lines[len(lines) - 1].remove('')
+        lines.append(e)
+        while '' in lines[len(lines) - 1]:
+            lines[len(lines) - 1].remove('')
 
 
 work(lines)
